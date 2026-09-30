@@ -76,7 +76,11 @@ section{padding-block:70px;border-top:1px solid var(--rule)}
 
 /* hardware roster */
 .rack{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(196px,1fr))}
-.unit{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:16px 18px}
+.unit{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:16px 18px;
+  display:grid;grid-template-columns:52px 1fr;grid-template-rows:auto auto;gap:0 14px;align-items:center}
+.unit img{grid-row:1/3;width:52px;height:52px;object-fit:contain}
+.unit .nm{align-self:end}
+.unit .yr{align-self:start}
 .unit .nm{font-family:var(--disp);font-weight:700;font-size:17px}
 .unit .yr{font-family:var(--mono);font-size:12.5px;color:var(--soft);margin-top:5px}
 
@@ -203,14 +207,14 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
       in your hand.</p>
     </div>
     <div class="rack">
-      <div class="unit"><div class="nm">Palm Pre</div><div class="yr">2009</div></div>
-      <div class="unit"><div class="nm">Palm Pixi</div><div class="yr">2009</div></div>
-      <div class="unit"><div class="nm">Palm Pre Plus</div><div class="yr">2010</div></div>
-      <div class="unit"><div class="nm">Palm Pixi Plus</div><div class="yr">2010</div></div>
-      <div class="unit"><div class="nm">Palm Pre 2</div><div class="yr">2010</div></div>
-      <div class="unit"><div class="nm">HP Veer</div><div class="yr">2011</div></div>
-      <div class="unit"><div class="nm">HP Pre 3</div><div class="yr">2011</div></div>
-      <div class="unit"><div class="nm">HP TouchPad</div><div class="yr">2011</div></div>
+      <div class="unit"><img src="devices/pre.png" alt="Palm Pre"><div class="nm">Palm Pre</div><div class="yr">2009</div></div>
+      <div class="unit"><img src="devices/pixi.png" alt="Palm Pixi"><div class="nm">Palm Pixi</div><div class="yr">2009</div></div>
+      <div class="unit"><img src="devices/preplus.png" alt="Palm Pre Plus"><div class="nm">Palm Pre Plus</div><div class="yr">2010</div></div>
+      <div class="unit"><img src="devices/pixiplus.png" alt="Palm Pixi Plus"><div class="nm">Palm Pixi Plus</div><div class="yr">2010</div></div>
+      <div class="unit"><img src="devices/pre2.png" alt="Palm Pre 2"><div class="nm">Palm Pre 2</div><div class="yr">2010</div></div>
+      <div class="unit"><img src="devices/veer.png" alt="HP Veer"><div class="nm">HP Veer</div><div class="yr">2011</div></div>
+      <div class="unit"><img src="devices/pre3.png" alt="HP Pre 3"><div class="nm">HP Pre 3</div><div class="yr">2011</div></div>
+      <div class="unit"><img src="devices/touchpad.png" alt="HP TouchPad"><div class="nm">HP TouchPad</div><div class="yr">2011</div></div>
     </div>
   </div>
 </section>
