@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>webOS Internals</title>
+<meta name="description" content="Homebrew, patches and documentation for Palm and HP webOS devices. A community archive kept online and open for editing.">
+<link rel="icon" href="logo.png">
+<meta property="og:title" content="webOS Internals">
+<meta property="og:description" content="Homebrew, patches and documentation for Palm and HP webOS devices.">
+<meta property="og:image" content="https://webos-internals.org/logo.png">
+<link rel="preload" href="fonts/prelude-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/prelude-bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* Prelude — the webOS system typeface. Licensed; self-hosted. */
+@font-face{font-family:Prelude;src:url(fonts/prelude-light.woff2) format("woff2");font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:Prelude;src:url(fonts/prelude-regular.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:Prelude;src:url(fonts/prelude-bold.woff2) format("woff2");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:Prelude;src:url(fonts/prelude-black.woff2) format("woff2");font-weight:900;font-style:normal;font-display:swap}
+:root{
+  --paper:#EDEFEC;
+  --card:#F7F8F6;
+  --ink:#15191A;
+  --soft:#5A6462;
+  --rule:#CFD5D1;
+  --sun:#FFD133;
+  --sun-deep:#D9A800;
+  --disp:Prelude,"Segoe UI",system-ui,-apple-system,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--serif);font-size:18px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px;text-decoration-color:var(--sun-deep)}
+a:hover{background:var(--sun)}
+a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding-inline:24px}
+h1,h2,h3{font-family:var(--disp);font-weight:900;line-height:1.08;letter-spacing:-.02em;margin:0}
+
+/* masthead */
+.top{border-bottom:2px solid var(--ink)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap;padding-block:18px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand:hover{background:none}
+.brand img{width:34px;height:auto}
+.brand b{font-family:var(--disp);font-weight:700;font-size:19px;letter-spacing:-.02em}
+.nav{display:flex;gap:24px;flex-wrap:wrap;font-family:var(--disp);font-size:16px;font-weight:400}
+.nav a{text-decoration:none;border-bottom:2px solid transparent}
+.nav a:hover{background:none;border-bottom-color:var(--sun-deep)}
+
+/* hero */
+.hero{padding-block:62px 46px}
+.hero h1{font-size:clamp(40px,6.6vw,76px);max-width:16ch}
+.hero p{font-size:clamp(18px,2vw,21px);max-width:54ch;margin:24px 0 0;color:#2C3432}
+.mark{background:var(--sun);padding:1px 7px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+/* scale band */
+.band{background:var(--ink);color:var(--paper);margin-top:52px}
+.band .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:30px;padding-block:30px}
+.band .n{font-family:var(--disp);font-weight:900;font-size:34px;line-height:1;letter-spacing:-.02em;color:var(--sun)}
+.band .l{font-family:var(--mono);font-size:13px;color:#A9B3B0;margin-top:9px}
+
+section{padding-block:70px;border-top:1px solid var(--rule)}
+.head{max-width:58ch;margin-bottom:36px}
+.head h2{font-size:clamp(26px,3.4vw,36px)}
+.head p{color:var(--soft);margin:14px 0 0;font-size:17px}
+
+/* hardware roster */
+.rack{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(196px,1fr))}
+.unit{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:16px 18px}
+.unit .nm{font-family:var(--disp);font-weight:700;font-size:17px}
+.unit .yr{font-family:var(--mono);font-size:12.5px;color:var(--soft);margin-top:5px}
+
+/* featured: webOS Archive */
+.feature{
+  display:block;background:var(--ink);color:var(--paper);
+  padding:30px 32px;border:2px solid var(--ink);border-radius:4px;
+  text-decoration:none;margin-bottom:22px;box-shadow:7px 7px 0 var(--sun);
+}
+.feature:hover{background:#0B0F10;box-shadow:10px 10px 0 var(--sun)}
+.feature .tag{
+  display:inline-block;background:var(--sun);color:var(--ink);
+  font-family:var(--disp);font-weight:700;font-size:13.5px;
+  padding:3px 10px;border-radius:2px;margin-bottom:14px;
+}
+.feature b{font-family:var(--disp);font-weight:900;font-size:clamp(28px,4vw,40px);display:block;letter-spacing:-.02em;line-height:1.05}
+.feature .txt{display:block;max-width:64ch;margin-top:14px;font-size:17.5px;line-height:1.65;color:#D7DCDA}
+.feature .go{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:14px;color:var(--sun)}
+
+/* topic cards */
+.topics{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(288px,1fr))}
+.topic{display:block;background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:24px;text-decoration:none}
+.topic:hover{background:var(--card);border-color:var(--ink);box-shadow:5px 5px 0 var(--sun)}
+.topic b{font-family:var(--disp);font-weight:700;font-size:20px;display:block;letter-spacing:-.01em}
+.topic span{display:block;color:var(--soft);font-size:16px;margin-top:9px;line-height:1.6}
+
+/* notice */
+.notice{background:var(--sun);border:2px solid var(--ink);padding:26px 28px;max-width:74ch}
+.notice h3{font-size:21px}
+.notice p{margin:12px 0 0;font-size:17px}
+.notice a{text-decoration-color:var(--ink)}
+.notice a:hover{background:var(--paper)}
+
+footer{border-top:2px solid var(--ink);padding-block:42px 60px;font-size:16px;color:var(--soft)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/"><img src="logo.png" alt=""><b>webOS Internals</b></a>
+    <nav class="nav">
+      <a href="#hardware">Hardware</a>
+      <a href="#start">Where to start</a>
+      <a href="https://wiki.webos-internals.org/">Wiki</a>
+      <a href="https://webosarchive.org/">webOS Archive</a>
+      <a href="https://github.com/webos-internals">Source</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Everything we worked out about webOS, <span class="mark">kept online</span>.</h1>
+    <p>Palm and HP stopped supporting these phones in 2011. The homebrew community
+    carried on — patches, package management, kernel work, a way into the Linux
+    underneath. All of it is still here, still readable, and still open to edit.</p>
+  </div>
+</div>
+
+<div class="band">
+  <div class="wrap">
+    <div><div class="n">3,015</div><div class="l">pages of documentation</div></div>
+    <div><div class="n">1,680</div><div class="l">images and files</div></div>
+    <div><div class="n">2009–2015</div><div class="l">years of hardware covered</div></div>
+    <div><div class="n">65</div><div class="l">source repositories</div></div>
+  </div>
+</div>
+
+<section id="start">
+  <div class="wrap">
+    <div class="head">
+      <h2>Where to start</h2>
+      <p>The wiki is large and was written over many years. These are the doors most
+      people came in through.</p>
+    </div>
+    <a class="feature" href="https://webosarchive.org/">
+      <span class="tag">Start here</span>
+      <b>webOS Archive</b>
+      <span class="txt">The living hub for legacy webOS: the restored app catalogue, the SDK and
+      developer tools, active forums and Discord. If you want software to install on a device,
+      or people to ask, go there first. What follows on this site is the reference material
+      behind it — how the system works and how to change it.</span>
+      <span class="go">webosarchive.org</span>
+    </a>
+
+    <div class="topics">
+      <a class="topic" href="https://wiki.webos-internals.org/wiki/Portal:Where_to_Get_Started">
+        <b>Getting started</b>
+        <span>The paths into modifying a Pre, depending on how far you want to go.</span>
+      </a>
+      <a class="topic" href="https://wiki.webos-internals.org/wiki/Application:Preware">
+        <b>Preware</b>
+        <span>The homebrew package manager: patches, apps and kernels from community feeds.</span>
+      </a>
+      <a class="topic" href="https://wiki.webos-internals.org/wiki/Portal:Patches_to_webOS">
+        <b>Patches</b>
+        <span>Modifications to the stock interface that add features Palm left out.</span>
+      </a>
+      <a class="topic" href="https://wiki.webos-internals.org/wiki/Portal:Accessing_Linux">
+        <b>Accessing Linux</b>
+        <span>Getting a root shell and working with the Linux system under webOS.</span>
+      </a>
+      <a class="topic" href="https://wiki.webos-internals.org/wiki/Portal:Linux_Applications">
+        <b>Linux applications</b>
+        <span>The Optware catalogue, compiled and packaged to run on the device.</span>
+      </a>
+      <a class="topic" href="https://wiki.webos-internals.org/wiki/WebOS_2_Upgrade">
+        <b>webOS 2 upgrade</b>
+        <span>Putting webOS 2.1 on a Pre or Pre Plus that never officially received it.</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="hardware">
+  <div class="wrap">
+    <div class="head">
+      <h2>The hardware</h2>
+      <p>Devices this archive documents. Most of the material assumes one of these
+      in your hand.</p>
+    </div>
+    <div class="rack">
+      <div class="unit"><div class="nm">Palm Pre</div><div class="yr">2009</div></div>
+      <div class="unit"><div class="nm">Palm Pixi</div><div class="yr">2009</div></div>
+      <div class="unit"><div class="nm">Palm Pre Plus</div><div class="yr">2010</div></div>
+      <div class="unit"><div class="nm">Palm Pixi Plus</div><div class="yr">2010</div></div>
+      <div class="unit"><div class="nm">Palm Pre 2</div><div class="yr">2010</div></div>
+      <div class="unit"><div class="nm">HP Veer</div><div class="yr">2011</div></div>
+      <div class="unit"><div class="nm">HP Pre 3</div><div class="yr">2011</div></div>
+      <div class="unit"><div class="nm">HP TouchPad</div><div class="yr">2011</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="living">
+  <div class="wrap">
+    <div class="notice">
+      <h3>Still a wiki, not a museum</h3>
+      <p>Everything here moved to new hosting in 2026 with its full edit history intact.
+      Accounts still work and pages can still be edited — if you find something wrong or
+      missing, fix it. For webOS on hardware you can buy today, see
+      <a href="https://webos-ports.org/">LuneOS</a>.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>Written by the webOS homebrew community since 2009.</div>
+    <div>For apps, tools and an active community, see <a href="https://webosarchive.org/">webOS Archive</a>.</div>
+  </div>
+</footer>
+
+</body>
+</html>
