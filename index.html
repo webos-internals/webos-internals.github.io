@@ -63,6 +63,23 @@ h1,h2,h3{font-family:var(--disp);font-weight:900;line-height:1.08;letter-spacing
 .hero p{font-size:clamp(18px,2vw,21px);max-width:54ch;margin:24px 0 0;color:#2C3432}
 .mark{background:var(--sun);padding:1px 7px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 
+/* hero device deck */
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:56px;align-items:center}
+.deck{position:relative;height:292px}
+.dcard{
+  position:absolute;width:164px;height:219px;background:var(--card);
+  border:2px solid var(--ink);border-radius:4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:14px;text-align:center;
+}
+.dcard img{width:84px;height:84px;object-fit:contain;margin-bottom:12px}
+.dcard .dn{font-family:var(--disp);font-weight:700;font-size:15.5px;line-height:1.2}
+.dcard .dy{font-family:var(--mono);font-size:12px;color:var(--soft);margin-top:4px}
+.d1{left:0;top:30px;transform:rotate(-7deg)}
+.d2{left:20%;top:4px;transform:rotate(-2deg);z-index:2}
+.d3{left:41%;top:0;transform:rotate(3deg);z-index:3}
+.d4{left:62%;top:20px;transform:rotate(8deg);z-index:4;box-shadow:6px 6px 0 var(--sun)}
+
 /* scale band */
 .band{background:var(--ink);color:var(--paper);margin-top:52px}
 .band .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:30px;padding-block:30px}
@@ -117,6 +134,12 @@ section{padding-block:70px;border-top:1px solid var(--rule)}
 footer{border-top:2px solid var(--ink);padding-block:42px 60px;font-size:16px;color:var(--soft)}
 footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 
+@media (max-width:900px){
+  .hero .wrap{grid-template-columns:1fr;gap:44px}
+  .deck{height:250px;max-width:420px}
+  .dcard{width:142px;height:190px}
+  .dcard img{width:70px;height:70px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -137,10 +160,19 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 
 <div class="hero">
   <div class="wrap">
-    <h1>Everything we worked out about webOS, <span class="mark">kept online</span>.</h1>
-    <p>Palm and HP stopped supporting these phones in 2011. The homebrew community
-    carried on — patches, package management, kernel work, a way into the Linux
-    underneath. All of it is still here, still readable, and still open to edit.</p>
+    <div>
+      <h1>Everything we worked out about webOS, <span class="mark">kept online</span>.</h1>
+      <p>Palm and HP stopped supporting these phones in 2011. The homebrew community
+      carried on — patches, package management, kernel work, a way into the Linux
+      underneath. All of it is still here, still readable, and still open to edit.</p>
+    </div>
+
+    <div class="deck" aria-label="Devices this archive documents">
+      <div class="dcard d1"><img src="devices/pre.png" alt="Palm Pre"><div class="dn">Palm Pre</div><div class="dy">2009</div></div>
+      <div class="dcard d2"><img src="devices/pixi.png" alt="Palm Pixi"><div class="dn">Palm Pixi</div><div class="dy">2009</div></div>
+      <div class="dcard d3"><img src="devices/pre3.png" alt="HP Pre 3"><div class="dn">HP Pre 3</div><div class="dy">2011</div></div>
+      <div class="dcard d4"><img src="devices/touchpad.png" alt="HP TouchPad"><div class="dn">HP TouchPad</div><div class="dy">2011</div></div>
+    </div>
   </div>
 </div>
 
